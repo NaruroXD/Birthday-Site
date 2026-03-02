@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Birthday Surprise</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  text-align:center;
+  overflow:hidden;
+}
+
+.page{
+  display:none;
+  height:100vh;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+
+button{
+  padding:12px 25px;
+  margin:10px;
+  border:none;
+  border-radius:25px;
+  cursor:pointer;
+  font-size:16px;
+  background:white;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.1);
+}
+
+#page1{
+  display:flex;
+  background:linear-gradient(45deg,pink,hotpink);
+  color:white;
+}
+
+#page2,#page3{
+  display:flex;
+  background:#ffe6f2;
+}
+
+#page4{
+  display:flex;
+  background:black;
+  color:white;
+  position:relative;
+}
+
+#noPage{
+  display:flex;
+  background:#ffcccc;
+}
+
+/* Floating Hearts */
+.heart{
+  position:absolute;
+  color:#ff4da6;
+  font-size:20px;
+  animation:float 6s linear infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(100vh);opacity:1;}
+  100%{transform:translateY(-10vh);opacity:0;}
+}
+
+canvas{
+  position:absolute;
+  top:0;
+  left:0;
+}
+</style>
+</head>
+
+<body>
+
+<audio autoplay loop>
+  <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Page 1 -->
+<div id="page1" class="page">
+  <h1>Want to see something cool? 😽</h1>
+  <button onclick="showPage('page2')">Yes</button>
+  <button onclick="showPage('noPage')">No</button>
+</div>
+
+<!-- No Page -->
+<div id="noPage" class="page">
+  <h1>How dare you! 😡</h1>
+  <button onclick="showPage('page1')">Back</button>
+</div>
+
+<!-- Page 2 -->
+<div id="page2" class="page">
+  <h1>Click on Next for something crazy 🎊</h1>
+  <button onclick="showPage('page3')">Next</button>
+</div>
+
+<!-- Page 3 -->
+<div id="page3" class="page">
+  <h1>Almost there 😄😚</h1>
+  <button onclick="showPage('page4')">Next</button>
+</div>
+
+<!-- Page 4 -->
+<div id="page4" class="page">
+  <canvas id="fireworks"></canvas>
+  <h1>HAPPY BIRTHDAY DEAR 🎊🎉</h1>
+  <p>
+You are my world dear  
+I am nothing  
+Without you 😭🥀
+  </p>
+</div>
+
+<script>
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.style.display="none");
+  document.getElementById(id).style.display="flex";
+  if(id==="page4"){
+    startHearts();
+    startFireworks();
+  }
+}
+
+/* Floating Hearts */
+function startHearts(){
+  setInterval(()=>{
+    let heart=document.createElement("div");
+    heart.className="heart";
+    heart.innerHTML="💖";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.fontSize=(20+Math.random()*20)+"px";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),6000);
+  },300);
+}
+
+/* Fireworks */
+function startFireworks(){
+  const canvas=document.getElementById("fireworks");
+  const ctx=canvas.getContext("2d");
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+
+  function firework(){
+    let x=Math.random()*canvas.width;
+    let y=Math.random()*canvas.height/2;
+    for(let i=0;i<50;i++){
+      ctx.beginPath();
+      ctx.arc(x+Math.random()*100-50,y+Math.random()*100-50,2,0,Math.PI*2);
+      ctx.fillStyle="hsl("+Math.random()*360+",100%,50%)";
+      ctx.fill();
+    }
+  }
+  setInterval(firework,800);
+}
+</script>
+
+</body>
+</html>
