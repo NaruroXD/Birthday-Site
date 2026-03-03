@@ -2,152 +2,275 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Birthday Surprise</title>
-<style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultimate Birthday Surprise</title>
 
+<style>
 body{
   margin:0;
-  font-family: 'Segoe UI', sans-serif;
-  text-align:center;
   overflow:hidden;
-  background: linear-gradient(135deg,#ff9a9e,#fad0c4,#fad0c4,#ffdde1);
+  font-family:'Poppins', sans-serif;
+  background:linear-gradient(-45deg,#ff6ec4,#7873f5,#ff9a9e,#fad0c4);
   background-size:400% 400%;
-  animation: gradientBG 12s ease infinite;
+  animation:gradientMove 10s ease infinite;
   color:white;
 }
 
-@keyframes gradientBG{
+@keyframes gradientMove{
   0%{background-position:0% 50%;}
   50%{background-position:100% 50%;}
   100%{background-position:0% 50%;}
 }
 
 .page{
-  display:none;
+  position:absolute;
+  width:100%;
   height:100vh;
+  display:flex;
+  flex-direction:column;
   justify-content:center;
   align-items:center;
-  flex-direction:column;
-  backdrop-filter: blur(10px);
+  text-align:center;
+  opacity:0;
+  pointer-events:none;
+  transition:0.5s ease;
 }
 
-#page1{display:flex;}
+.page.active{
+  opacity:1;
+  pointer-events:all;
+}
+
+h1{
+  font-size:50px;
+  text-shadow:0 5px 25px rgba(0,0,0,0.6);
+}
+
+.glow{
+  animation:glowPulse 1.5s infinite alternate;
+}
+
+@keyframes glowPulse{
+  from{text-shadow:0 0 10px white,0 0 20px pink;}
+  to{text-shadow:0 0 25px white,0 0 40px hotpink;}
+}
 
 button{
-  padding:12px 25px;
-  margin:10px;
+  padding:18px 45px;
+  margin:15px;
+  font-size:20px;
   border:none;
-  border-radius:30px;
-  font-size:16px;
+  border-radius:40px;
   cursor:pointer;
-  background:rgba(255,255,255,0.3);
   color:white;
-  backdrop-filter: blur(5px);
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(10px);
   transition:0.3s;
 }
 
 button:hover{
-  transform:scale(1.1);
-  background:rgba(255,255,255,0.5);
+  transform:scale(1.15);
 }
 
-/* Floating aesthetic circles */
-.circle{
-  position:absolute;
+/* MAGIC PORTAL */
+.magic{
+  position:fixed;
+  width:120px;
+  height:120px;
+  border:3px solid white;
   border-radius:50%;
-  background:rgba(255,255,255,0.2);
-  animation: float 15s linear infinite;
+  box-shadow:0 0 30px white;
+  transform:scale(0);
+  pointer-events:none;
+  z-index:999;
 }
 
-@keyframes float{
+.magic::before{
+  content:"✦ ✧ ✦ ✧ ✦";
+  position:absolute;
+  top:35%;
+  left:10%;
+  font-size:18px;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+
+.magic.animate{
+  animation:expand 0.8s ease forwards;
+}
+
+@keyframes expand{
+  to{
+    transform:scale(20);
+    opacity:0;
+  }
+}
+
+/* Confetti */
+.confetti{
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:hsl(var(--h),100%,50%);
+  animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(100vh) rotate(720deg);
+    opacity:0;
+  }
+}
+
+/* Hearts */
+.heart{
+  position:absolute;
+  animation:rise 8s linear infinite;
+}
+
+@keyframes rise{
   from{transform:translateY(100vh);}
   to{transform:translateY(-10vh);}
 }
 
-/* Popup */
-.popup{
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%) scale(0);
+/* Sparkles */
+.sparkle{
+  position:absolute;
+  width:4px;
+  height:4px;
   background:white;
-  color:#ff4da6;
-  padding:30px;
-  border-radius:20px;
-  text-align:center;
-  box-shadow:0 0 30px rgba(0,0,0,0.3);
-  transition:0.4s;
+  border-radius:50%;
+  animation:twinkle 2s infinite alternate;
 }
 
-.popup.show{
-  transform:translate(-50%,-50%) scale(1);
+@keyframes twinkle{
+  from{opacity:0.2;}
+  to{opacity:1;}
 }
 
+/* Screen shake */
+.shake{
+  animation:shake 0.5s;
+}
+
+@keyframes shake{
+  0%{transform:translate(0);}
+  25%{transform:translate(5px,-5px);}
+  50%{transform:translate(-5px,5px);}
+  75%{transform:translate(5px,5px);}
+  100%{transform:translate(0);}
+}
 </style>
 </head>
 <body>
 
-<!-- Floating aesthetic elements -->
-<script>
-for(let i=0;i<20;i++){
-  let c=document.createElement("div");
-  c.className="circle";
-  c.style.width=(20+Math.random()*80)+"px";
-  c.style.height=c.style.width;
-  c.style.left=Math.random()*100+"vw";
-  c.style.animationDuration=(10+Math.random()*10)+"s";
-  document.body.appendChild(c);
-}
-</script>
+<audio id="bgmusic" loop>
+  <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+</audio>
 
-<!-- Pages -->
-<div id="page1" class="page">
+<div id="page1" class="page active">
   <h1>Want to see something cool? 😽</h1>
-  <button onclick="showPage('page2')">Yes</button>
-  <button onclick="showPage('noPage')">No</button>
+  <button onclick="magicTransition(event,'page2')">Yes</button>
+  <button onclick="magicTransition(event,'noPage')">No</button>
 </div>
 
 <div id="noPage" class="page">
   <h1>How dare you! 😡</h1>
-  <button onclick="showPage('page1')">Back</button>
+  <button onclick="magicTransition(event,'page1')">Back</button>
 </div>
 
 <div id="page2" class="page">
   <h1>Click on Next for something crazy 🎊</h1>
-  <button onclick="showPage('page3')">Next</button>
+  <button onclick="magicTransition(event,'page3')">Next</button>
 </div>
 
 <div id="page3" class="page">
   <h1>Almost there 😄😚</h1>
-  <button onclick="showPage('page4')">Next</button>
+  <button onclick="magicTransition(event,'page4')">Next</button>
 </div>
 
 <div id="page4" class="page">
-  <h1>HAPPY BIRTHDAY 🎉🎂</h1>
-  <p>You are my world dear 💖</p>
-</div>
-
-<!-- Popup -->
-<div id="popup" class="popup">
-  <h2>🎊 Surpriseeee! 🎊</h2>
-  <p>You mean everything to me 💕</p>
-  <button onclick="closePopup()">Close</button>
+  <h1 class="glow">HAPPY BIRTHDAY 🎉🎂</h1>
+  <p style="font-size:26px;" id="typing"></p>
 </div>
 
 <script>
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.style.display="none");
-  document.getElementById(id).style.display="flex";
+let musicStarted=false;
 
-  if(id==="page4"){
-    setTimeout(()=>{
-      document.getElementById("popup").classList.add("show");
-    },1000);
+function magicTransition(e,nextPage){
+  if(!musicStarted){
+    document.getElementById("bgmusic").play();
+    musicStarted=true;
   }
+
+  const m=document.createElement("div");
+  m.className="magic";
+  m.style.left=e.clientX-60+"px";
+  m.style.top=e.clientY-60+"px";
+  document.body.appendChild(m);
+
+  setTimeout(()=>m.classList.add("animate"),10);
+
+  setTimeout(()=>{
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove("active"));
+    document.getElementById(nextPage).classList.add("active");
+    m.remove();
+
+    if(nextPage==="page4"){
+      finalExplosion();
+    }
+  },700);
 }
 
-function closePopup(){
-  document.getElementById("popup").classList.remove("show");
+function finalExplosion(){
+  document.body.classList.add("shake");
+  setTimeout(()=>document.body.classList.remove("shake"),500);
+
+  for(let i=0;i<150;i++){
+    let c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.setProperty('--h',Math.random()*360);
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3000);
+  }
+
+  typeText("You are my world dear 💖 I am nothing without you 😭🥀");
+}
+
+function typeText(text){
+  let i=0;
+  let target=document.getElementById("typing");
+  let interval=setInterval(()=>{
+    target.innerHTML+=text.charAt(i);
+    i++;
+    if(i>=text.length) clearInterval(interval);
+  },50);
+}
+
+/* Hearts */
+for(let i=0;i<30;i++){
+  let heart=document.createElement("div");
+  heart.className="heart";
+  heart.innerHTML="💖";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.fontSize=(15+Math.random()*25)+"px";
+  heart.style.animationDuration=(6+Math.random()*5)+"s";
+  document.body.appendChild(heart);
+}
+
+/* Sparkles */
+for(let i=0;i<80;i++){
+  let s=document.createElement("div");
+  s.className="sparkle";
+  s.style.left=Math.random()*100+"vw";
+  s.style.top=Math.random()*100+"vh";
+  s.style.animationDelay=Math.random()*2+"s";
+  document.body.appendChild(s);
 }
 </script>
 
